@@ -1,0 +1,5 @@
+*.obj
+*.png
+*.npy
+/__pycache__
+/.vscode

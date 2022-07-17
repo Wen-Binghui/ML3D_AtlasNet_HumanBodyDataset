@@ -1,4 +1,4 @@
-*.obj
+mesh/*.obj
 *.png
 *.npy
 /__pycache__

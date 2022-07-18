@@ -1,11 +1,11 @@
-# %%
 from data_loader import Data_set
 import torch
 from model.model import EncoderDecoder
 from chamfer_distance import ChamferDistance
 import utils
+import torch.optim as optim
 
-class Opt(object):
+class Option(object):
     template_type = "SPHERE"
     bottleneck_size = 1024 
     number_points = 2500
@@ -20,25 +20,28 @@ class Opt(object):
         "SQUARE": 2,
         "SPHERE": 3,
     }
+    lrate = 0.001
+
+
     def __init__(self):
         self.dim_template = self.dim_template_dict[self.template_type]
 
-opt = Opt()
-train_DataLoader = Data_set(opt.number_points, 'train')
+option = Option()
+train_DataLoader = Data_set(option.number_points, 'train')
 
 
 
 if torch.cuda.is_available():
-    opt.device = torch.device(f"cuda:0")
+    option.device = torch.device(f"cuda:0")
 else:
-    opt.device = torch.device(f"cpu")
+    option.device = torch.device(f"cpu")
 
-network = EncoderDecoder(opt)
-print("Using: {}".format(opt.device))
-out = network(train_DataLoader[0]['img'].unsqueeze(0).float().to(opt.device)).squeeze(0)
+network = EncoderDecoder(option)
+print("Using: {}".format(option.device))
+out = network(train_DataLoader[0]['img'].unsqueeze(0).float().to(option.device)).squeeze(0)
 print(out.shape)
 
-true_out = train_DataLoader[0]['points'].unsqueeze(0).to(opt.device)
+true_out = train_DataLoader[0]['points'].unsqueeze(0).to(option.device)
 print(true_out.shape)
 
 
@@ -54,6 +57,7 @@ print(loss.item())
 
 
 # %%
-utils.show_point_cloud(out)
+# utils.show_point_cloud(out)
+opt = optim.Adam(network.parameters(), lr=opt.lrate)
 
 

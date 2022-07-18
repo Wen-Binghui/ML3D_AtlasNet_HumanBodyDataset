@@ -22,7 +22,6 @@ class Option(object):
     }
     lrate = 0.001
 
-
     def __init__(self):
         self.dim_template = self.dim_template_dict[self.template_type]
 

@@ -55,9 +55,9 @@ loss = (torch.mean(dist1)) + (torch.mean(dist2))
 
 print(loss.item())
 
+opt = optim.Adam(network.parameters(), lr=option.lrate)
 
 # %%
-# utils.show_point_cloud(out)
-opt = optim.Adam(network.parameters(), lr=opt.lrate)
+utils.show_point_cloud(true_out)
 
 

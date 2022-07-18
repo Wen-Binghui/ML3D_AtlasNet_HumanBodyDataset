@@ -10,6 +10,7 @@ def show_point_cloud(torch_tensor):
     pointcloud_np = torch_tensor.squeeze(0).to('cpu').detach().numpy() \
         if len(torch_tensor.shape)==3 else torch_tensor.to('cpu').detach().numpy()
     assert pointcloud_np.shape[1]==3, "pointcloud dim 1 must be 3 but have{}".format(pointcloud_np.shape)
+    for i in range(3): print("maximal value in dim {} is {:.2f} and minimal {}".format(i, np.max(pointcloud_np[:,i]), np.min(pointcloud_np[:,i])))
     cld = trimesh.points.PointCloud(pointcloud_np)
     cld.show()
 

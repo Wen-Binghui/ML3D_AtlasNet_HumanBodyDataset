@@ -6,6 +6,13 @@ from PIL import Image
 import os
 os.environ['PYOPENGL_PLATFORM'] = 'egl'
 
+def show_point_cloud(torch_tensor):
+    pointcloud_np = torch_tensor.squeeze(0).to('cpu').detach().numpy() \
+        if len(torch_tensor.shape)==3 else torch_tensor.to('cpu').detach().numpy()
+    assert pointcloud_np.shape[1]==3, "pointcloud dim 1 must be 3 but have{}".format(pointcloud_np.shape)
+    cld = trimesh.points.PointCloud(pointcloud_np)
+    cld.show()
+
 def remove_nans(tensor):
     tensor_nan = torch.isnan(tensor[:, 3])
     return tensor[~tensor_nan, :]

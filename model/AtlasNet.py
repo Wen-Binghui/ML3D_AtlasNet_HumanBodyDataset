@@ -110,7 +110,7 @@ class Atlasnet(nn.Module):
 
         # Deform each patch
         output_points = torch.cat([self.decoder[i](input_points[i], latent_vector.unsqueeze(2)).unsqueeze(1) for i in
-                                   range(0, self.opt.nb_primitives)], dim=1)
+                                   range(0, self.opt.nb_primitives)], dim=1).transpose(-1, -2)
 
         # Return the deformed pointcloud
         return output_points.contiguous()  # batch, nb_prim, num_point, 3

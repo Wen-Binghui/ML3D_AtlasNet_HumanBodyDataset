@@ -1,10 +1,9 @@
+# %%
 from data_loader import Data_set
-import numpy as np
 import torch
 from model.model import EncoderDecoder
 from chamfer_distance import ChamferDistance
-
-ds = Data_set(250, 'train')
+import utils
 
 class Opt(object):
     template_type = "SPHERE"
@@ -25,6 +24,9 @@ class Opt(object):
         self.dim_template = self.dim_template_dict[self.template_type]
 
 opt = Opt()
+train_DataLoader = Data_set(opt.number_points, 'train')
+
+
 
 if torch.cuda.is_available():
     opt.device = torch.device(f"cuda:0")
@@ -33,9 +35,25 @@ else:
 
 network = EncoderDecoder(opt)
 print("Using: {}".format(opt.device))
-out = network(ds[0]['img'].unsqueeze(0).float().to(opt.device))
+out = network(train_DataLoader[0]['img'].unsqueeze(0).float().to(opt.device)).squeeze(0)
 print(out.shape)
 
-true_out = ds[0]['points']
+true_out = train_DataLoader[0]['points'].unsqueeze(0).to(opt.device)
+print(true_out.shape)
+
+
+
+
+# %%
+chamferDist = ChamferDistance()
+
+dist1, dist2, idx1, idx2 = chamferDist(out, true_out)
+loss = (torch.mean(dist1)) + (torch.mean(dist2))
+
+print(loss.item())
+
+
+# %%
+utils.show_point_cloud(out)
 
 

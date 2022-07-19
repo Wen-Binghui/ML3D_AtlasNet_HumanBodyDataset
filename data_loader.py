@@ -25,7 +25,7 @@ class Data_set(torch.utils.data.Dataset):
 
         item = self.items[index]
         image_path = 'render/' + self.split + '/' + item
-        image=torch.from_numpy(np.copy(Image.open(image_path)).transpose(2,0,1))
+        image=torch.from_numpy(np.copy(Image.open(image_path)).transpose(2,0,1)).float()
         points_path = 'pointcloud/' + self.split + '/' + item.split('_')[0] + '.npy'
         npy = torch.from_numpy(np.load(points_path))
         rand_index = np.random.choice(np.arange(npy.shape[0]), self.num_sample_points, replace = False)

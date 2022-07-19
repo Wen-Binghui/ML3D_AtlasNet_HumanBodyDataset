@@ -2,7 +2,7 @@ import pymesh
 import numpy as np
 import torch
 from torch.autograd import Variable
-
+# from pymesh_sou.PyMesh.python.pymesh.meshutils.generate_icosphere import generate_icosphere
 """
         Author : Thibault Groueix 01.11.2019
 """

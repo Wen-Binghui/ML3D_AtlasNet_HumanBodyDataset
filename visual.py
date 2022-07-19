@@ -40,11 +40,11 @@ model = EncoderDecoder(option)
 
 model.load_state_dict(torch.load('runs/model_best.ckpt'))
 
-input = train_Data[1]['img'].unsqueeze(0).float().to(option.device)
-print(input.shape)
-model.generate_mesh(input)
-# output = model(input).squeeze(0)
-# print(output.shape)
-# utils.show_point_cloud(output)
+input = train_Data[0]['img'].unsqueeze(0).float().to(option.device)
+
+mesh = model.generate_mesh(input)
+import pymesh
+pymesh.save_mesh("runs/generated_mesh/tmp_overfit.stl", mesh, ascii=True)
+
 
 

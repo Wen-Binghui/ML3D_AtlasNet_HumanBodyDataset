@@ -2,7 +2,6 @@ import pymesh
 import numpy as np
 import torch
 from torch.autograd import Variable
-# from pymesh_sou.PyMesh.python.pymesh.meshutils.generate_icosphere import generate_icosphere
 """
         Author : Thibault Groueix 01.11.2019
 """
@@ -49,7 +48,7 @@ class SphereTemplate(Template):
         """
         if not self.npoints == npoints:
             self.mesh = pymesh.generate_icosphere(1, [0, 0, 0], 4)  # 2562 vertices
-            self.vertex = torch.from_numpy(self.mesh.vertices).to(device).float()
+            self.vertex = torch.from_numpy(self.mesh.vertices.copy()).to(device).float()
             self.num_vertex = self.vertex.size(0)
             self.vertex = self.vertex.transpose(0,1).contiguous().unsqueeze(0)
             self.npoints = npoints

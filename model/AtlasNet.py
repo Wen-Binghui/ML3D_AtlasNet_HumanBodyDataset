@@ -126,7 +126,7 @@ class Atlasnet(nn.Module):
         output_points = [self.decoder[i](input_points[i], latent_vector.unsqueeze(2)).squeeze() for i in
                          range(0, self.opt.nb_primitives)]
 
-        output_meshes = [pymesh.form_mesh(vertices=output_points[i].transpose(1, 0).contiguous().cpu().numpy(),
+        output_meshes = [pymesh.form_mesh(vertices=output_points[i].transpose(1, 0).contiguous().cpu().detach().numpy(),
                                           faces=self.template[i].mesh.faces)
                          for i in range(self.opt.nb_primitives)]
 

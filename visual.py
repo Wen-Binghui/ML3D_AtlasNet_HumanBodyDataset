@@ -1,8 +1,7 @@
 from data_loader import Data_set
 import torch
 from model.model import EncoderDecoder
-
-
+import pymesh
 
 class Option(object):
     template_type = "SPHERE"
@@ -43,8 +42,7 @@ model.load_state_dict(torch.load('runs/model_best.ckpt'))
 input = train_Data[0]['img'].unsqueeze(0).float().to(option.device)
 
 mesh = model.generate_mesh(input)
-import pymesh
-pymesh.save_mesh("runs/generated_mesh/tmp_overfit.stl", mesh, ascii=True)
+pymesh.save_mesh("runs/generated_mesh/tmp_overfit.obj", mesh, ascii=True)
 
 
 

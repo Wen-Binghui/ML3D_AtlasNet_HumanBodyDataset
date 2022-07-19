@@ -17,7 +17,7 @@ pip install git+'https://github.com/otaheri/chamfer_distance'
 
 
 ## DataSet
+download link: https://graphics.soe.ucsc.edu/data/BodyModels/index.html
 
 下载人体模型数据集后，解压到mesh文件夹，不分性别，两个文件都解压到mesh，mesh文件夹里直接就能看到.obj文件，一共3048个.obj文件。<br>
-todo 加数据集链接
 

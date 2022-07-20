@@ -1,34 +1,11 @@
-from data_loader import Data_set
-import torch
+from data_loader import Data_set_body
+import torch, utils
 from model.model import EncoderDecoder
 import pymesh
 
-class Option(object):
-    template_type = "SPHERE"
-    bottleneck_size = 1024 
-    number_points = 2500
-    number_points_eval = 2500
-    num_layers = 2
-    nb_primitives = 1
-    remove_all_batchNorms = 0
-    hidden_neurons = 512
-    activation = 'relu'
-    SVR = True
-    dim_template_dict = {
-        "SQUARE": 2,
-        "SPHERE": 3,
-    }
-    lrate = 0.001
-    batch_size = 16
-    print_every_n = 1
-    validate_every_n = 10
-    max_epochs = 20
 
-    def __init__(self):
-        self.dim_template = self.dim_template_dict[self.template_type]
-
-option = Option()
-train_Data = Data_set(option.number_points, 'overfit')
+option = utils.Option()
+train_Data = Data_set_body(option.number_points, 'overfit')
 if torch.cuda.is_available():
     option.device = torch.device(f"cuda:0")
 else:
@@ -37,12 +14,14 @@ else:
 
 model = EncoderDecoder(option)
 
-model.load_state_dict(torch.load('runs/model_best.ckpt'))
+model_dict_file = 'runs/model_best_mutlti.ckpt'
+model.load_state_dict(torch.load(model_dict_file))
 
-input = train_Data[0]['img'].unsqueeze(0).float().to(option.device)
+input = train_Data[12]['img'].unsqueeze(0).float().to(option.device)
 
 mesh = model.generate_mesh(input)
-pymesh.save_mesh("runs/generated_mesh/tmp_overfit.obj", mesh, ascii=True)
+pymesh.save_mesh("runs/generated_mesh/"+model_dict_file.split('/')[-1].replace('.ckpt','.obj'),\
+     mesh, ascii=True)
 
 
 

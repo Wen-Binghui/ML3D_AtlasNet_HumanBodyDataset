@@ -4,9 +4,35 @@ import trimesh, torch
 from scipy.spatial.transform import Rotation as Rot
 from PIL import Image
 import os
-from data_loader import Data_set
+from data_loader import Data_set_body
 
 os.environ['PYOPENGL_PLATFORM'] = 'egl'
+
+
+class Option(object):
+    template_type = "SPHERE"
+    bottleneck_size = 1024 
+    number_points = 1200
+    number_points_eval = 2500
+    num_layers = 2
+    nb_primitives = 4
+    remove_all_batchNorms = 0
+    hidden_neurons = 512
+    activation = 'relu'
+    SVR = True
+    dim_template_dict = {
+        "SQUARE": 2,
+        "SPHERE": 3,
+    }
+    lrate = 0.001
+    batch_size = 16
+    print_every_n = 1
+    validate_every_n = 10
+    max_epochs = 200
+
+    def __init__(self):
+        self.dim_template = self.dim_template_dict[self.template_type]
+
 
 def show_point_cloud(torch_tensor):
     pointcloud_np = torch_tensor.squeeze(0).to('cpu').detach().numpy() \
@@ -50,7 +76,7 @@ def gen_pointclouds(file, target):
         np.save(f, data)
 
 
-def train(model, loss_criterion, optimizer, trainloader, valloader, option):
+def train(model, loss_criterion, optimizer, trainloader, valloader, option, output_file):
     best_loss = 10000000
 
     loss_criterion.to(option.device)
@@ -63,7 +89,7 @@ def train(model, loss_criterion, optimizer, trainloader, valloader, option):
     for epoch in range(option.max_epochs):
         for i, batch in enumerate(trainloader):
             # move batch to device
-            Data_set.move_batch_to_device(batch, option.device)
+            Data_set_body.move_batch_to_device(batch, option.device)
             optimizer.zero_grad()
             prediction = model(batch['img'])
             prediction = prediction.view(prediction.shape[0], -1, 3).contiguous()
@@ -91,7 +117,7 @@ def train(model, loss_criterion, optimizer, trainloader, valloader, option):
                 total= 0
                 # forward pass and evaluation for entire validation set
                 for batch_val in valloader:
-                    Data_set.move_batch_to_device(batch_val, option.device)
+                    Data_set_body.move_batch_to_device(batch_val, option.device)
 
                     with torch.no_grad():
                         prediction = model(batch_val['img'])
@@ -106,7 +132,7 @@ def train(model, loss_criterion, optimizer, trainloader, valloader, option):
 
                 if loss_total_val < best_loss:
                     print('better loss, model saved.')
-                    torch.save(model.state_dict(), f'runs/model_best.ckpt') # model_best.ckpt
+                    torch.save(model.state_dict(), output_file) # model_best.ckpt
                     best_loss = loss_total_val
 
                 # set model back to train

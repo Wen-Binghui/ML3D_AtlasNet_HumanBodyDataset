@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 
 
-class Data_set(torch.utils.data.Dataset):
+class Data_set_body(torch.utils.data.Dataset):
 
 
     # dataset_path = Path("exercise_3/data/sdf_sofas")  # path to sdf data for ShapeNet sofa class - make sure you've downloaded the processed data at appropriate path

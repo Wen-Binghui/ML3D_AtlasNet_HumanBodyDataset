@@ -17,11 +17,11 @@ model = EncoderDecoder(option)
 model_dict_file = 'runs/model_best_mutlti.ckpt'
 model.load_state_dict(torch.load(model_dict_file))
 
-input = train_Data[12]['img'].unsqueeze(0).float().to(option.device)
+input = train_Data[0]['img'].unsqueeze(0).float().to(option.device)
 
 mesh = model.generate_mesh(input)
 pymesh.save_mesh("runs/generated_mesh/"+model_dict_file.split('/')[-1].replace('.ckpt','.obj'),\
      mesh, ascii=True)
 
-
+utils.show_point_cloud(model(input).squeeze(0).view(1,-1,3))
 

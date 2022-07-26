@@ -12,8 +12,8 @@ os.environ['PYOPENGL_PLATFORM'] = 'egl'
 class Option(object):
     template_type = "SPHERE"
     bottleneck_size = 1024 
-    number_points = 1200
-    number_points_eval = 2500
+    number_points = 12000
+    number_points_eval = 25000
     num_layers = 2
     nb_primitives = 4
     remove_all_batchNorms = 0

@@ -18,7 +18,7 @@ chamferDist = chamfer_3DDist()
 
 model = EncoderDecoder(option)
 opt = optim.Adam(model.parameters(), lr=option.lrate)
-output_file = 'runs/model_best_mutlti.ckpt'
+output_file = 'runs/model_best_12000.ckpt'
 utils.train(model, chamferDist, opt, trainloader, trainloader, option, output_file)
 
 

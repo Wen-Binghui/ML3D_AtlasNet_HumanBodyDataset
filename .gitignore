@@ -1,5 +1,5 @@
 mesh/mesh_humanbody/*.obj
-
+*.obj
 *.png
 *.npy
 *.ckpt

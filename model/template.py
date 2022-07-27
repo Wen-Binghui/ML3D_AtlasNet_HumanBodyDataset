@@ -47,9 +47,11 @@ class SphereTemplate(Template):
         Return Tensor of Size [x, 3]
         """
         if not self.npoints == npoints:
-            self.mesh = pymesh.generate_icosphere(1, [0, 0, 0], 4)  # 2562 vertices
+            self.mesh = pymesh.generate_icosphere(1, [0, 0, 0], 6)  # 2562 vertices
+            
             self.vertex = torch.from_numpy(self.mesh.vertices.copy()).to(device).float()
             self.num_vertex = self.vertex.size(0)
+            print(self.num_vertex)
             self.vertex = self.vertex.transpose(0,1).contiguous().unsqueeze(0)
             self.npoints = npoints
 

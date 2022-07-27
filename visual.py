@@ -14,7 +14,7 @@ else:
 
 model = EncoderDecoder(option)
 
-model_dict_file = 'runs/model_best_headposes.ckpt'
+model_dict_file = 'runs/model_best_headposes3.ckpt'
 model.load_state_dict(torch.load(model_dict_file))
 
 input = train_Data[-1]['img'].unsqueeze(0).float().to(option.device)

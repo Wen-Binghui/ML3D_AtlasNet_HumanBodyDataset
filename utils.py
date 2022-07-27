@@ -14,10 +14,10 @@ class Option(object):
     bottleneck_size = 1024 
     overfit = True
     number_points = 15000
-    nb_primitives = 1 # number_points/nb_primitives = nb_pts_in_primitive
+    nb_primitives = 4 # number_points/nb_primitives = nb_pts_in_primitive
 
     number_points_eval = 15000
-    num_layers = 2
+    num_layers = 3
     remove_all_batchNorms = 0
     hidden_neurons = 512
     activation = 'relu'
@@ -27,7 +27,7 @@ class Option(object):
         "SPHERE": 3,
     }
     lrate = 0.001
-    batch_size = 16
+    batch_size = 4
     print_every_n = 1
     validate_every_n = 10
     max_epochs = 200

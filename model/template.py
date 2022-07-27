@@ -51,7 +51,6 @@ class SphereTemplate(Template):
             
             self.vertex = torch.from_numpy(self.mesh.vertices.copy()).to(device).float()
             self.num_vertex = self.vertex.size(0)
-            print(self.num_vertex)
             self.vertex = self.vertex.transpose(0,1).contiguous().unsqueeze(0)
             self.npoints = npoints
 

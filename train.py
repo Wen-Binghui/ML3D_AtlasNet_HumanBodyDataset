@@ -5,7 +5,7 @@ import utils
 from ChamferDistancePytorch.chamfer3D.dist_chamfer_3D import chamfer_3DDist
 import torch.optim as optim
 
-output_file = 'runs/model_best_headposes3.ckpt'
+output_file = 'runs/model_best_headposes_all_face.ckpt'
 
 option = utils.Option()
 train_Data = Data_set_body(option.number_points, 'overfit', "headposes")

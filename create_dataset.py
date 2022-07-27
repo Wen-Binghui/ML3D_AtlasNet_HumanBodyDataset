@@ -12,7 +12,7 @@ total_lim = 1
 limit = {'train': max(total_lim*0.7,1), \
         'test': max(total_lim*0.15,1), \
         'val': max(total_lim*0.15,1), \
-        'overfit': 2}
+        'overfit': 100}
 
 split_list = ['train','test','val','overfit']
 split_list = ['overfit']
@@ -31,17 +31,16 @@ index_train = np.random.choice(np.arange(n_obj), int(0.7 * n_obj), replace=False
 index_test_and_val = np.setdiff1d(np.arange(n_obj), index_train, True)
 index_val = index_test_and_val[np.random.choice(np.arange(index_test_and_val.size), int(0.5*index_test_and_val.size), replace=False)]
 index_test = np.setdiff1d(index_test_and_val, index_val)
-index_overfit = np.array([0,1])
+index_overfit = np.arange(n_obj)
 if set_name == "humanbody":
     rot_z=[-110, -90, -60, -30, -10]
     rot_x=[30, 45, 60, 75, 90]
 elif set_name == "headposes":
     rot_z=[-10,-2,0,2,10]    #perpendicular to screen
     rot_x=[-10,-2,0,2,10]      #vertical
-    # rot_y =[-10,-2,0,2,10]    #horizon
 
 
-index={'train': index_train, 'test': index_test, 'val': index_val, 'overfit': index_overfit}
+# index={'train': index_train, 'test': index_test, 'val': index_val, 'overfit': index_overfit}
 index={'overfit': index_overfit}
 for split in split_list:
     count = 0 

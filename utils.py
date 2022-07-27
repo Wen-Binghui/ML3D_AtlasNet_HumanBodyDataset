@@ -35,6 +35,32 @@ class Option(object):
     def __init__(self):
         self.dim_template = self.dim_template_dict[self.template_type]
 
+class OptionSquare(object):
+    template_type = "SQUARE"
+    bottleneck_size = 1024 
+    overfit = True
+    number_points = 15000
+    nb_primitives = 50 # number_points/nb_primitives = nb_pts_in_primitive
+
+    number_points_eval = 15000
+    num_layers = 2
+    remove_all_batchNorms = 0
+    hidden_neurons = 512
+    activation = 'relu'
+    SVR = True
+    dim_template_dict = {
+        "SQUARE": 2,
+        "SPHERE": 3,
+    }
+    lrate = 0.001
+    batch_size = 8
+    print_every_n = 1
+    validate_every_n = 10
+    max_epochs = 200
+
+    def __init__(self):
+        self.dim_template = self.dim_tem
+
 
 def show_point_cloud(torch_tensor):
     pointcloud_np = torch_tensor.squeeze(0).to('cpu').detach().numpy() \
@@ -72,7 +98,7 @@ def gen_rendering(file, target_filename, z_rot, x_rot):
     print(target_filename)
     del(Renderer)
 
-def gen_pointclouds(file, target):
+def gen_pointclouds(file, target, num = None):
     data = trimesh.load(open(file), file_type = 'obj').vertices.view(np.ndarray).astype(np.float32)
     with open(target, 'wb') as f:
         np.save(f, data)

@@ -25,6 +25,7 @@ if not os.path.exists("split_txt/split_txt_"+set_name):
         os.makedirs("split_txt/split_txt_"+set_name)
 
 obj_file_list = os.listdir("mesh/mesh_"+set_name)
+obj_file_list.sort() 
 n_obj = len(obj_file_list)
 index_train = np.random.choice(np.arange(n_obj), int(0.7 * n_obj), replace=False)
 index_test_and_val = np.setdiff1d(np.arange(n_obj), index_train, True)
@@ -34,9 +35,10 @@ index_overfit = np.array([0,1])
 if set_name == "humanbody":
     rot_z=[-110, -90, -60, -30, -10]
     rot_x=[30, 45, 60, 75, 90]
-else:
-    rot_z=[-110, -90, -60, -30, -10]
-    rot_x=[30, 45, 60, 75, 90]
+elif set_name == "headposes":
+    rot_z=[-10,-2,0,2,10]    #perpendicular to screen
+    rot_x=[-10,-2,0,2,10]      #vertical
+    # rot_y =[-10,-2,0,2,10]    #horizon
 
 
 index={'train': index_train, 'test': index_test, 'val': index_val, 'overfit': index_overfit}

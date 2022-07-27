@@ -27,7 +27,7 @@ class Option(object):
         "SPHERE": 3,
     }
     lrate = 0.001
-    batch_size = 8
+    batch_size = 16
     print_every_n = 1
     validate_every_n = 10
     max_epochs = 200
@@ -82,7 +82,7 @@ def gen_rendering(file, target_filename, z_rot, x_rot):
     light = pyrender.DirectionalLight(color=[1,1,1,1], intensity=2e3)
     node_mesh = scene.add(mesh, pose=  np.eye(4))
     node_light = scene.add(light, pose=  np.eye(4))
-    t = np.array([0,0,20])
+    t = np.array([0,0,25])
     T = np.eye(4)
     T[0:3, 3] += t 
     R = np.zeros((4, 4))

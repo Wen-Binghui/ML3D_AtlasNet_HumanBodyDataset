@@ -31,8 +31,12 @@ index_test_and_val = np.setdiff1d(np.arange(n_obj), index_train, True)
 index_val = index_test_and_val[np.random.choice(np.arange(index_test_and_val.size), int(0.5*index_test_and_val.size), replace=False)]
 index_test = np.setdiff1d(index_test_and_val, index_val)
 index_overfit = np.array([0,1])
-rot_z=[-110, -90, -60, -30, -10]
-rot_x=[30, 45, 60, 75, 90]
+if set_name == "humanbody":
+    rot_z=[-110, -90, -60, -30, -10]
+    rot_x=[30, 45, 60, 75, 90]
+else:
+    rot_z=[-110, -90, -60, -30, -10]
+    rot_x=[30, 45, 60, 75, 90]
 
 
 index={'train': index_train, 'test': index_test, 'val': index_val, 'overfit': index_overfit}

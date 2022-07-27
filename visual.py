@@ -24,7 +24,7 @@ input = train_Data[id]['img'].unsqueeze(0).float().to(option.device)
 
 model.eval()
 mesh = model.generate_mesh(input)
-pymesh.save_mesh("runs/generated_mesh/"+model_dict_file.split('/')[-1].replace('.ckpt',f'{id}_.obj'),\
+pymesh.save_mesh("runs/generated_mesh/"+model_dict_file.split('/')[-1].replace('.ckpt',f'_{id}.obj'),\
      mesh, ascii=True)
 
 utils.show_point_cloud(model(input).squeeze(0).view(1,-1,3))

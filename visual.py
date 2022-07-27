@@ -5,7 +5,7 @@ import pymesh
 
 
 option = utils.Option()
-train_Data = Data_set_body(option.number_points, 'overfit')
+train_Data = Data_set_body(option.number_points, 'overfit', "headposes")
 if torch.cuda.is_available():
     option.device = torch.device(f"cuda:0")
 else:
@@ -14,11 +14,12 @@ else:
 
 model = EncoderDecoder(option)
 
-model_dict_file = 'runs/model_best_mutlti.ckpt'
+model_dict_file = 'runs/model_best_headposes.ckpt'
 model.load_state_dict(torch.load(model_dict_file))
 
-input = train_Data[0]['img'].unsqueeze(0).float().to(option.device)
+input = train_Data[-1]['img'].unsqueeze(0).float().to(option.device)
 
+model.eval()
 mesh = model.generate_mesh(input)
 pymesh.save_mesh("runs/generated_mesh/"+model_dict_file.split('/')[-1].replace('.ckpt','.obj'),\
      mesh, ascii=True)

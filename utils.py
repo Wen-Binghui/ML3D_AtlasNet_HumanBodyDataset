@@ -12,10 +12,12 @@ os.environ['PYOPENGL_PLATFORM'] = 'egl'
 class Option(object):
     template_type = "SPHERE"
     bottleneck_size = 1024 
-    number_points = 12000
-    number_points_eval = 25000
+    overfit = True
+    number_points = 15000
+    nb_primitives = 1 # number_points/nb_primitives = nb_pts_in_primitive
+
+    number_points_eval = 15000
     num_layers = 2
-    nb_primitives = 4
     remove_all_batchNorms = 0
     hidden_neurons = 512
     activation = 'relu'
@@ -25,7 +27,7 @@ class Option(object):
         "SPHERE": 3,
     }
     lrate = 0.001
-    batch_size = 16
+    batch_size = 8
     print_every_n = 1
     validate_every_n = 10
     max_epochs = 200
@@ -54,7 +56,7 @@ def gen_rendering(file, target_filename, z_rot, x_rot):
     light = pyrender.DirectionalLight(color=[1,1,1,1], intensity=2e3)
     node_mesh = scene.add(mesh, pose=  np.eye(4))
     node_light = scene.add(light, pose=  np.eye(4))
-    t = np.array([0,0,2])
+    t = np.array([0,0,20])
     T = np.eye(4)
     T[0:3, 3] += t 
     R = np.zeros((4, 4))

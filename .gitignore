@@ -1,5 +1,8 @@
-mesh/*.obj
+mesh/mesh_humanbody/*.obj
+*.obj
 *.png
 *.npy
+*.ckpt
+*.zip
 /__pycache__
 /.vscode

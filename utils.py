@@ -61,7 +61,7 @@ def gen_rendering(file, target_filename, z_rot, x_rot):
     T[0:3, 3] += t 
     R = np.zeros((4, 4))
     R[3, 3] = 1
-    R[:3, :3] += Rot.from_euler('ZYX', [z_rot, 0,x_rot], degrees=True).as_matrix()
+    R[:3, :3] += Rot.from_euler('ZYX', [z_rot, 0, x_rot], degrees=True).as_matrix()
     pose = R @ T
     node_camera = scene.add(camera, pose = pose)
     Renderer = pyrender.OffscreenRenderer(224,224)

@@ -33,6 +33,7 @@ index_overfit = np.random.choice(np.arange(n_obj), n_obj, replace=False)
 rot_z=[-110, -90, -60, -30, -10]
 rot_x=[30, 45, 60, 75, 90]
 
+
 index={'train': index_train, 'test': index_test, 'val': index_val, 'overfit': index_overfit}
 for split in split_list:
     count = 0 

@@ -1,18 +1,20 @@
 import numpy as np
 import os
+
+from sympy import numbered_symbols
 import utils
 
 ### Main program
 np.random.seed(0)
 
 set_name = 'headposes'
+num_points = 15000
 
-
-total_lim = 1
+total_lim = 100
 limit = {'train': max(total_lim*0.7,1), \
         'test': max(total_lim*0.15,1), \
         'val': max(total_lim*0.15,1), \
-        'overfit': 2}
+        'overfit': 100}
 
 split_list = ['train','test','val','overfit']
 split_list = ['overfit']
@@ -25,13 +27,14 @@ if not os.path.exists("split_txt/split_txt_"+set_name):
         os.makedirs("split_txt/split_txt_"+set_name)
 
 obj_file_list = os.listdir("mesh/mesh_"+set_name)
+import pdb;pdb.set_trace()
 obj_file_list.sort() 
 n_obj = len(obj_file_list)
 index_train = np.random.choice(np.arange(n_obj), int(0.7 * n_obj), replace=False)
 index_test_and_val = np.setdiff1d(np.arange(n_obj), index_train, True)
 index_val = index_test_and_val[np.random.choice(np.arange(index_test_and_val.size), int(0.5*index_test_and_val.size), replace=False)]
 index_test = np.setdiff1d(index_test_and_val, index_val)
-index_overfit = np.array([0,1])
+index_overfit = np.array(list(range(n_obj)))
 if set_name == "humanbody":
     rot_z=[-110, -90, -60, -30, -10]
     rot_x=[30, 45, 60, 75, 90]
@@ -50,7 +53,7 @@ for split in split_list:
             file = obj_file_list[i]
             target_prefix_render = "render/render_"+set_name+'/' +split+'/' + file.replace(".obj", "_")
             target_prefix_cloud = "pointcloud/pc_"+set_name+'/' + split + '/' + file.replace(".obj", ".npy")
-            utils.gen_pointclouds("mesh/mesh_" + set_name + '/'  + file, target_prefix_cloud)
+            utils.gen_pointclouds("mesh/mesh_" + set_name + '/'  + file, target_prefix_cloud, num = num_points)
             for iz in range(len(rot_z)):
                 for ix in range(len(rot_x)):
                     file_name = target_prefix_render + str(iz) + "_" + str(ix) + ".png"

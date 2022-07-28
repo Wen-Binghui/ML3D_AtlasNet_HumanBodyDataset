@@ -30,7 +30,7 @@ class Option(object):
     batch_size = 16
     print_every_n = 1
     validate_every_n = 10
-    max_epochs = 200
+    max_epochs =500
 
     def __init__(self):
         self.dim_template = self.dim_template_dict[self.template_type]
@@ -99,7 +99,21 @@ def gen_rendering(file, target_filename, z_rot, x_rot):
     del(Renderer)
 
 def gen_pointclouds(file, target, num = None):
-    data = trimesh.load(open(file), file_type = 'obj').vertices.view(np.ndarray).astype(np.float32)
+    if num is None:
+        data = trimesh.load(open(file), file_type = 'obj').vertices.view(np.ndarray).astype(np.float32)
+    else:
+        data = trimesh.sample.sample_surface(trimesh.load(open(file), file_type = 'obj'), num)[0].astype(np.float32)
+    x_mean = np.mean(data[:,0])
+    y_mean = np.mean(data[:,1])
+    z_mean = np.mean(data[:,2])
+    
+    data[:,0] =  data[:,0] - x_mean
+    data[:,1] =  data[:,1] - y_mean
+    data[:,2] =  data[:,2] - z_mean
+    std = np.std(data)
+    data = data / std
+    if num is not None:
+        assert len(data) == num
     with open(target, 'wb') as f:
         np.save(f, data)
 

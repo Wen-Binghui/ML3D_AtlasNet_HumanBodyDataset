@@ -27,8 +27,7 @@ if not os.path.exists("split_txt/split_txt_"+set_name):
         os.makedirs("split_txt/split_txt_"+set_name)
 
 obj_file_list = os.listdir("mesh/mesh_"+set_name)
-import pdb;pdb.set_trace()
-obj_file_list.sort() 
+obj_file_list.sort()
 n_obj = len(obj_file_list)
 index_train = np.random.choice(np.arange(n_obj), int(0.7 * n_obj), replace=False)
 index_test_and_val = np.setdiff1d(np.arange(n_obj), index_train, True)

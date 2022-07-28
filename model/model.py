@@ -22,6 +22,8 @@ class EncoderDecoder(nn.Module):
     def generate_mesh(self, x):
         return self.decoder.generate_mesh(self.encoder(x))
 
+    def generate_mesh_by_latent(self, x):
+        return self.decoder.generate_mesh(x)
 
 # def weights_init(m):
 #     classname = m.__class__.__name__

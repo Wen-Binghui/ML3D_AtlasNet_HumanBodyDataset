@@ -12,7 +12,7 @@ from scipy.spatial.transform import Rotation
 os.environ['PYOPENGL_PLATFORM'] = 'egl'
 
 
-class Option(object):
+class Headpose_Option(object):
     template_type = "SPHERE"
     bottleneck_size = 1024 
     overfit = True
@@ -77,15 +77,18 @@ def remove_nans(tensor):
     tensor_nan = torch.isnan(tensor[:, 3])
     return tensor[~tensor_nan, :]
 
-def gen_rendering(file, target_filename, z_rot, x_rot):
+def gen_rendering(file, target_filename, z_rot, x_rot, t):
     meshdata = trimesh.load(open(file), file_type = 'obj')
+    
+    meshdata.vertices -= np.mean(meshdata.vertices, axis = 0)
+    meshdata.vertices /= np.std(meshdata.vertices, axis = 0)
+
     mesh = pyrender.Mesh.from_trimesh(meshdata)
     scene = pyrender.Scene(ambient_light=[.1, .1, .3], bg_color=[0, 0, 0, 0])
     camera = pyrender.PerspectiveCamera(yfov=np.pi / 3.0)
     light = pyrender.DirectionalLight(color=[1,1,1,1], intensity=2e3)
     node_mesh = scene.add(mesh, pose=  np.eye(4))
     node_light = scene.add(light, pose=  np.eye(4))
-    t = np.array([0,0,25])
     T = np.eye(4)
     T[0:3, 3] += t 
     R = np.zeros((4, 4))
@@ -107,9 +110,10 @@ def gen_pointclouds(file, target, num = None):
     else:
         data = trimesh.sample.sample_surface(trimesh.load(open(file), file_type = 'obj'), num)[0].astype(np.float32)
     x_mean = np.mean(data[:,0])
+    
     y_mean = np.mean(data[:,1])
     z_mean = np.mean(data[:,2])
-    
+    print(x_mean, y_mean, z_mean)
     data[:,0] =  data[:,0] - x_mean
     data[:,1] =  data[:,1] - y_mean
     data[:,2] =  data[:,2] - z_mean
@@ -250,7 +254,6 @@ def meshes_to_gif(mesh_folder, output_path, fps):
     w_img = 1024
     obj_file_list = os.listdir(mesh_folder)
     obj_file_list.sort(key = lambda x: int(re.findall(r"\d+",x)[0]) )
-    # print(obj_file_list)
     r = pyrender.OffscreenRenderer(w_img, w_img)
     image_buffer = [np.zeros((w_img, w_img, 3), dtype=np.uint8) for i in range(len(obj_file_list))]
 
@@ -258,12 +261,12 @@ def meshes_to_gif(mesh_folder, output_path, fps):
         base_mesh = trimesh.load_mesh(mesh_folder+'/'+mesh_path)
         trimesh.repair.fix_normals(base_mesh)
         loc = np.array([0, 0, 0])
-        scale = 48
+        scale = 24
         base_mesh.apply_translation(-loc)
         base_mesh.apply_scale(1 / scale)
         mesh = pyrender.Mesh.from_trimesh(base_mesh)
         camera_rotation = np.eye(4)
-        camera_rotation[:3, :3] = Rotation.from_euler('y', 0, degrees=True).as_matrix() @ Rotation.from_euler('x', 0, degrees=True).as_matrix()
+        camera_rotation[:3, :3] = Rotation.from_euler('y', 30, degrees=True).as_matrix() @ Rotation.from_euler('x', -20, degrees=True).as_matrix()
         camera_translation = np.eye(4)
         camera_translation[:3, 3] = np.array([0, 0, 1.25])
         camera_pose = camera_rotation @ camera_translation

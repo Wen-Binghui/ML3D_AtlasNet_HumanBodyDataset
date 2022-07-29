@@ -5,7 +5,7 @@ import pymesh
 from PIL import Image
 import numpy as np
 
-option = utils.Option()
+option = utils.Headpose_Option()
 train_Data = Data_set_body(option.number_points, 'overfit', "headposes")
 if torch.cuda.is_available():
     option.device = torch.device(f"cuda:0")
@@ -14,7 +14,7 @@ else:
 
 
 model = EncoderDecoder(option)
-
+print('NN loaded.')
 model_dict_file = 'runs/model_best_headposes3.ckpt'
 model.load_state_dict(torch.load(model_dict_file))
 ind = -50
@@ -29,8 +29,9 @@ model.eval()
 mesh = model.generate_mesh(input)
 pymesh.save_mesh("runs/generated_mesh/"+model_dict_file.split('/')[-1].replace('.ckpt',f'_{id}.obj'),\
      mesh, ascii=True)
-
+print('mesh saved')
 mesh = trimesh.Trimesh(vertices = mesh.vertices, faces = mesh.faces, process = False)
+trimesh.repair.fix_normals(mesh)
 mesh.show()
 
 # utils.show_point_cloud(model(input).squeeze(0).view(1,-1,3))

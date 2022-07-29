@@ -1,4 +1,5 @@
 mesh/mesh_humanbody/*.obj
+!mesh/mesh_animals/*.obj
 *.obj
 *.png
 *.npy

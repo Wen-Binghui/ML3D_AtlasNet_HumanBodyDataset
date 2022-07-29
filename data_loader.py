@@ -2,12 +2,9 @@ import numpy as np
 import torch
 from pathlib import Path
 from PIL import Image
-
+import os
 
 class Data_set_body(torch.utils.data.Dataset):
-
-
-    # dataset_path = Path("exercise_3/data/sdf_sofas")  # path to sdf data for ShapeNet sofa class - make sure you've downloaded the processed data at appropriate path
 
     def __init__(self, num_sample_points, split, dataset_name):
         """

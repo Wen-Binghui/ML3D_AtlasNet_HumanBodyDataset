@@ -1,6 +1,6 @@
-mesh/mesh_humanbody/*.obj
-!mesh/mesh_animals/*.obj
 *.obj
+!mesh/mesh_animals/*.obj
+
 *.png
 *.npy
 *.ckpt

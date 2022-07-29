@@ -4,9 +4,13 @@ from model.model import EncoderDecoder
 import utils
 from ChamferDistancePytorch.chamfer3D.dist_chamfer_3D import chamfer_3DDist
 import torch.optim as optim
+import options
+import time
+option_dict = {'animals': options.Animals_Option(),\
+    'headposes': options.Headpose_Option()}
 
-def train_interpolation(model_output):
-    option = utils.Headpose_Option()
+def train_interpolation(dataset_type, model_output):
+    option = option_dict[dataset_type]
     train_Data = Data_set_body(option.number_points, 'overfit', "headposes")
     trainloader = torch.utils.data.DataLoader(train_Data, batch_size=option.batch_size, shuffle=True)
     if torch.cuda.is_available():
@@ -21,5 +25,7 @@ def train_interpolation(model_output):
     utils.train(model, chamferDist, opt, trainloader, trainloader, option, model_output)
 
 if __name__ == "__main__":
-    output_file = 'runs/model_best_headposes3.ckpt'
-    train_interpolation(output_file)
+    time = time.strftime("%m-%d_%Hh%Mm", time.localtime())
+    dataset_type = 'animals'
+    output_file = f'runs/model_animals_interp_{time}.ckpt'
+    train_interpolation(dataset_type, output_file)

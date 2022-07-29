@@ -12,7 +12,7 @@ total_lim = 100
 limit = {'train': max(total_lim*0.7,1), \
         'test': max(total_lim*0.15,1), \
         'val': max(total_lim*0.15,1), \
-        'overfit': 1}
+        'overfit': 100}
 
 split_list = list(limit.keys())
 split_list = ['overfit']

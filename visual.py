@@ -4,8 +4,9 @@ from model.model import EncoderDecoder
 import pymesh
 from PIL import Image
 import numpy as np
+import options
 
-option = utils.Headpose_Option()
+option = options.Headpose_Option()
 train_Data = Data_set_body(option.number_points, 'overfit', "headposes")
 if torch.cuda.is_available():
     option.device = torch.device(f"cuda:0")

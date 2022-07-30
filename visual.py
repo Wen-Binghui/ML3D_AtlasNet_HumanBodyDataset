@@ -6,8 +6,8 @@ from PIL import Image
 import numpy as np
 import options
 
-option = options.Headpose_Option()
-train_Data = Data_set_body(option.number_points, 'overfit', "headposes")
+option = options.Animals_Option()
+train_Data = Data_set_body(option.number_points, 'overfit', "animals")
 if torch.cuda.is_available():
     option.device = torch.device(f"cuda:0")
 else:
@@ -16,9 +16,9 @@ else:
 
 model = EncoderDecoder(option)
 print('NN loaded.')
-model_dict_file = 'runs/model_best_headposes3.ckpt'
+model_dict_file = 'runs/model_animals_interp_07-30_21h33m.ckpt'
 model.load_state_dict(torch.load(model_dict_file))
-ind = -50
+ind = -5
 
 id = ind if ind>=0 else len(train_Data)+ind
 input = train_Data[ind]['img'].unsqueeze(0).float().to(option.device)

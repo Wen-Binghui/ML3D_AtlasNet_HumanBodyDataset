@@ -5,7 +5,7 @@ from ChamferDistancePytorch.chamfer3D.dist_chamfer_3D import chamfer_3DDist
 import torch.optim as optim
 import options
 import time
-option_dict = {'animals': options.Animals_Option(),\
+option_dict = {'animals': options.Animals_normal_Option(),\
     'headposes': options.Headpose_normal_Option()}
 
 def train(model, loss_criterion, optimizer, trainloader, valloader, option, output_file):

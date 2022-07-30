@@ -4,8 +4,8 @@ import utils
 
 ### Main program
 np.random.seed(0)
-set_name_ori = 'headposes'
-set_name = 'headposes'
+set_name_ori = 'animals'
+set_name = 'animals'
 num_points = 15000
 
 total_lim = 100

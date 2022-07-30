@@ -42,7 +42,7 @@ class Animals_normal_Option(object):
         "SPHERE": 3,
     }
     lrate = 0.001
-    batch_size = 16
+    batch_size = 6
     print_every_n = 1
     validate_every_n = 20
     max_epochs =700

@@ -87,6 +87,6 @@ def train_normal(dataset_type, model_output):
 
 if __name__ == "__main__":
     time = time.strftime("%m-%d_%Hh%Mm", time.localtime())
-    dataset_type = 'headposes'
-    output_file = f'runs/model_headposes_normal_{time}.ckpt'
+    dataset_type = 'animals'
+    output_file = f'runs/model_animals_normal_{time}.ckpt'
     train_normal(dataset_type, output_file)

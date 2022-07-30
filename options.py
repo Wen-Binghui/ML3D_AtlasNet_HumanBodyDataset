@@ -19,7 +19,7 @@ class Animals_Option(object):
     batch_size = 6
     print_every_n = 1
     validate_every_n = 10
-    max_epochs =500
+    max_epochs =400
 
     def __init__(self):
         self.dim_template = self.dim_template_dict[self.template_type]

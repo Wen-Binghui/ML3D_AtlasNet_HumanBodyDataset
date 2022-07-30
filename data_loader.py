@@ -2,7 +2,6 @@ import numpy as np
 import torch
 from pathlib import Path
 from PIL import Image
-import os
 
 class Data_set_body(torch.utils.data.Dataset):
 

@@ -1,10 +1,9 @@
 import numpy as np
-import pyrender, k3d, re
+import pyrender, re
 import trimesh, torch
 from scipy.spatial.transform import Rotation as Rot
 from PIL import Image, ImageOps, ImageDraw, ImageFont
 import os
-from data_loader import Data_set_body
 from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 from tqdm import tqdm
 from scipy.spatial.transform import Rotation
@@ -72,95 +71,6 @@ def gen_pointclouds(file, target, num = None):
         assert len(data) == num
     with open(target, 'wb') as f:
         np.save(f, data)
-
-
-def train(model, loss_criterion, optimizer, trainloader, valloader, option, output_file):
-    best_loss = 10000000
-
-    loss_criterion.to(option.device)
-
-    # set model to train, important if your network has e.g. dropout or batchnorm layers
-    model.train()
-
-    # keep track of running average of train loss for printing
-    train_loss_running = 0.
-    for epoch in range(option.max_epochs):
-        for i, batch in enumerate(trainloader):
-            # move batch to device
-            Data_set_body.move_batch_to_device(batch, option.device)
-            optimizer.zero_grad()
-            prediction = model(batch['img'])
-            prediction = prediction.view(prediction.shape[0], -1, 3).contiguous()
-            true_out = batch['points'].contiguous()
-
-
-            dist1, dist2, _, _  = loss_criterion(true_out, prediction)
-            loss_total = ((torch.mean(dist1)) + (torch.mean(dist2))).to(option.device)
-
-            loss_total.backward()
-            optimizer.step()
-
-            # loss logging
-            train_loss_running += loss_total.item()
-            iteration = epoch * len(trainloader) + i
-            if iteration % option.print_every_n == (option.print_every_n - 1):
-                print(f'[{epoch:03d}/{i:05d}] train_loss: {train_loss_running / option.print_every_n:.5f}')
-                train_loss_running = 0.
-            # validation evaluation and logging
-            if iteration % option.validate_every_n == (option.validate_every_n - 1):
-
-                # set model to eval, important if your network has e.g. dropout or batchnorm layers
-                model.eval()
-                loss_total_val = 0
-                total= 0
-                # forward pass and evaluation for entire validation set
-                for batch_val in valloader:
-                    Data_set_body.move_batch_to_device(batch_val, option.device)
-
-                    with torch.no_grad():
-                        prediction = model(batch_val['img'])
-                        prediction = prediction.view(prediction.shape[0], -1, 3).contiguous()
-                        true_out = batch_val['points']
-
-                        dist1, dist2, _, _  = loss_criterion(prediction, true_out)
-                        loss_val_per = ((torch.mean(dist1)) + (torch.mean(dist2))).to(option.device)
-
-                    loss_total_val += loss_val_per.item()
-                    total += batch_val['points'].shape[0]
-
-                if loss_total_val < best_loss:
-                    print('better loss, model saved.')
-                    torch.save(model.state_dict(), output_file) # model_best.ckpt
-                    best_loss = loss_total_val
-
-                # set model back to train
-                model.train()
-
-
-def k3d_visualize_pointcloud(point_cloud, point_size, flip_axes=False, name='point_cloud'):
-    plot = k3d.plot(name=name, grid_visible=False, grid=(-0.55, -0.55, -0.55, 0.55, 0.55, 0.55))
-    if flip_axes:
-        point_cloud[:, 2] = point_cloud[:, 2] * -1
-        point_cloud[:, [0, 1, 2]] = point_cloud[:, [0, 2, 1]]
-    plt_points = k3d.points(positions=point_cloud.astype(np.float32), point_size=point_size, color=0xd0d0d0)
-    plot += plt_points
-    plt_points.shader = '3d'
-    plot.display()
-
-
-def k3d_visualize_mesh(mesh, flip_axes=False):
-    vertices = mesh.vertices
-    faces = mesh.faces
-    plot = k3d.plot(name='points', grid_visible=False, grid=(-0.55, -0.55, -0.55, 0.55, 0.55, 0.55))
-    if flip_axes:
-        vertices[:, 2] = vertices[:, 2] * -1
-        vertices[:, [0, 1, 2]] = vertices[:, [0, 2, 1]]
-    plt_mesh = k3d.mesh(vertices.astype(np.float32), faces.astype(np.uint32),
-                 opacity=1, color=0xd0d0d0, side='back')
-    plot += plt_mesh
-    plt_mesh.shader = '3d'
-    plot.display()
-    return plot
 
 def create_raymond_lights():
     thetas = np.pi * np.array([1.0 / 6.0, 1.0 / 6.0, 1.0 / 6.0])

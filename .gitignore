@@ -1,8 +1,9 @@
 *.obj
 *.pyc
 !mesh/mesh_animals/*.obj
-
+!runs/generated_mesh/*.obj
 *.png
+!runs/generated_mesh/*.png
 *.npy
 *.ckpt
 *.zip

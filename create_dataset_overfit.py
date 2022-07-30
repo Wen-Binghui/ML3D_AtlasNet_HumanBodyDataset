@@ -5,10 +5,10 @@ import utils
 ### Main program
 np.random.seed(0)
 
-set_name = 'animals'
+set_name = 'humanbody'
 num_points = 15000
 
-limit = {'overfit': 1}
+limit = {'overfit': 5}
 
 split_list = list(limit.keys())
 
@@ -31,9 +31,11 @@ index={'overfit': index_overfit}
 
 
 if set_name == "humanbody":
+    t = np.array([0,0,6])
     rot_z=[-110, -90, -60, -30, -10]
     rot_x=[30, 45, 60, 75, 90]
 elif set_name == "headposes":
+    t = np.array([0,0,6])
     rot_z=[-10,-2,0,2,10]    #perpendicular to screen
     rot_x=[-10,-2,0,2,10]      #vertical
 elif set_name == "animals":

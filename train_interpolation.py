@@ -6,7 +6,8 @@ import torch.optim as optim
 import options
 import time
 option_dict = {'animals': options.Animals_Option(),\
-    'headposes': options.Headpose_Option()}
+    'headposes': options.Headpose_Option(),\
+    'humanbody': options.Animals_Option()}
 import train
 
 def train_interpolation(dataset_type, model_output):
@@ -26,6 +27,6 @@ def train_interpolation(dataset_type, model_output):
 
 if __name__ == "__main__":
     time = time.strftime("%m-%d_%Hh%Mm", time.localtime())
-    dataset_type = 'animals'
-    output_file = f'runs/model_animals_interp_{time}.ckpt'
+    dataset_type = 'humanbody'
+    output_file = f'runs/model_humanbody_interp_{time}.ckpt'
     train_interpolation(dataset_type, output_file)

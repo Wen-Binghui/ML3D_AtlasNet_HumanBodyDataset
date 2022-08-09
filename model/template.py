@@ -39,6 +39,7 @@ class SphereTemplate(Template):
         rand_grid = torch.cuda.FloatTensor(shape).to(device).float()
         rand_grid.data.normal_(0, 1)
         rand_grid = rand_grid / torch.sqrt(torch.sum(rand_grid ** 2, dim=1, keepdim=True))
+        # print(f'random point shape:{rand_grid.shape}')
         return Variable(rand_grid)
 
     def get_regular_points(self, npoints=None, device="gpu0"):
@@ -53,7 +54,7 @@ class SphereTemplate(Template):
             self.num_vertex = self.vertex.size(0)
             self.vertex = self.vertex.transpose(0,1).contiguous().unsqueeze(0)
             self.npoints = npoints
-
+        # print(f'regular point shape:{self.vertex.shape}')
         return Variable(self.vertex.to(device))
 
 

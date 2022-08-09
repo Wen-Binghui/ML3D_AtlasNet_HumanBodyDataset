@@ -59,11 +59,14 @@ class Mapping2Dto3D(nn.Module):
 
     def forward(self, x, latent):
         x = self.conv1(x) + latent
+        # batch * 1024 * 15000
         x = self.activation(self.bn1(x))
         x = self.activation(self.bn2(self.conv2(x)))
         for i in range(self.opt.num_layers):
             x = self.activation(self.bn_list[i](self.conv_list[i](x)))
-        return self.last_conv(x)
+        y = self.last_conv(x)
+        # print("output:", y.shape)
+        return y # batch * 3 * 15000
 
 class Atlasnet(nn.Module):
 

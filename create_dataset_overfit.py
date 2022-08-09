@@ -2,7 +2,10 @@ import numpy as np
 import os
 import utils
 
-### Main program
+"""
+Create only a small dataset for overfitting
+
+"""
 np.random.seed(0)
 
 set_name = 'humanbody'

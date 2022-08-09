@@ -1,8 +1,10 @@
 import numpy as np
 import os
 import utils
+"""
+Create dataset splited into 'train', 'val', 'test' sets.
 
-### Main program
+"""
 np.random.seed(0)
 set_name_ori = 'animals'
 set_name = 'animals'

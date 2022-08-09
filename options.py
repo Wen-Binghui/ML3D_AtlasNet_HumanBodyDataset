@@ -44,8 +44,8 @@ class Animals_normal_Option(object):
     lrate = 0.001
     batch_size = 6
     print_every_n = 1
-    validate_every_n = 20
-    max_epochs =700
+    validate_every_n = 5
+    max_epochs =40
 
     def __init__(self):
         self.dim_template = self.dim_template_dict[self.template_type]

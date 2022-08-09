@@ -5,10 +5,21 @@ from ChamferDistancePytorch.chamfer3D.dist_chamfer_3D import chamfer_3DDist
 import torch.optim as optim
 import options
 import time
+import numpy as np
+""""
+Training process
+
+"""
+
+
+
 option_dict = {'animals': options.Animals_normal_Option(),\
     'headposes': options.Headpose_normal_Option()}
 
 def train(model, loss_criterion, optimizer, trainloader, valloader, option, output_file):
+    loss_train = np.zeros((option.max_epochs, len(trainloader)))
+    loss_val = np.zeros((option.max_epochs, option.max_epochs//option.validate_every_n))
+
     best_loss = 10000000000
 
     loss_criterion.to(option.device)
@@ -18,7 +29,9 @@ def train(model, loss_criterion, optimizer, trainloader, valloader, option, outp
 
     # keep track of running average of train loss for printing
     train_loss_running = 0.
+    
     for epoch in range(option.max_epochs):
+        ind_val = 0
         for i, batch in enumerate(trainloader):
             # move batch to device
             Data_set_body.move_batch_to_device(batch, option.device)
@@ -31,7 +44,7 @@ def train(model, loss_criterion, optimizer, trainloader, valloader, option, outp
 
             loss_total.backward()
             optimizer.step()
-
+            loss_train[epoch, i] = loss_total.item()/batch['points'].shape[0]
             # loss logging
             train_loss_running += loss_total.item()
             iteration = epoch * len(trainloader) + i
@@ -44,6 +57,7 @@ def train(model, loss_criterion, optimizer, trainloader, valloader, option, outp
                 model.eval()
                 loss_total_val = 0
                 total= 0
+                
                 # forward pass and evaluation for entire validation set
                 for batch_val in valloader:
                     Data_set_body.move_batch_to_device(batch_val, option.device)
@@ -58,7 +72,9 @@ def train(model, loss_criterion, optimizer, trainloader, valloader, option, outp
 
                     loss_total_val += loss_val_per.item()
                     total += batch_val['points'].shape[0]
-
+                    
+                loss_val[epoch, ind_val] = loss_total_val / total
+                ind_val += 1
                 if loss_total_val < best_loss:
                     print(f'better loss, model saved. loss:{loss_total_val}')
                     torch.save(model.state_dict(), output_file) # model_best.ckpt
@@ -66,7 +82,9 @@ def train(model, loss_criterion, optimizer, trainloader, valloader, option, outp
 
                 # set model back to train
                 model.train()
-
+    time_txt = output_file.split('_')[-1].split('.')[0]
+    np.savetxt(f"runs/loss_train_{time_txt}.txt", loss_train, fmt='%f', delimiter = ',')
+    np.savetxt(f"runs/loss_val_{time_txt}.txt", loss_val, fmt='%f', delimiter = ',')
 
 def train_normal(dataset_type, model_output):
     option = option_dict[dataset_type]

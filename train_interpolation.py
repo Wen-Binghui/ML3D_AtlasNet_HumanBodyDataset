@@ -5,10 +5,16 @@ from ChamferDistancePytorch.chamfer3D.dist_chamfer_3D import chamfer_3DDist
 import torch.optim as optim
 import options
 import time
+import train
+
+"""
+Train a overfitting model using a small dataset created by create_dataset_overfit.py
+
+"""
+
 option_dict = {'animals': options.Animals_Option(),\
     'headposes': options.Headpose_Option(),\
     'humanbody': options.Animals_Option()}
-import train
 
 def train_interpolation(dataset_type, model_output):
     option = option_dict[dataset_type]
